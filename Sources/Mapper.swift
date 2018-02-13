@@ -153,6 +153,15 @@ public struct Mapper {
         throw MapperError.typeMismatchError(field: field, value: value, type: NSDictionary.self)
     }
 
+    public func from<T: Mappable>(_ field: String, prefixField: String) throws -> T {
+        let value = try self.JSONFromField(field)
+        if let JSON = value as? NSDictionary {
+            return try T(map: Mapper(JSON: JSON), fieldPrefix: prefixField)
+        }
+        
+        throw MapperError.typeMismatchError(field: field, value: value, type: NSDictionary.self)
+    }
+    
     /// Get an array of Mappable values from the given field in the source data
     ///
     /// This allows you to transparently have nested arrays of Mappable values
@@ -188,6 +197,10 @@ public struct Mapper {
         return try? self.from(field)
     }
 
+    public func optionalFrom<T: Mappable>(_ field: String, prefixField: String) -> T? {
+        return try? self.from(field, prefixField: prefixField)
+    }
+    
     /// Get an optional array of Mappable values from the given field in the source data
     ///
     /// This allows you to transparently have nested arrays of Mappable values

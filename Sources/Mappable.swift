@@ -21,6 +21,7 @@ import Foundation
 public protocol Mappable {
     /// Define how your custom object is created from a Mapper object
     init(map: Mapper) throws
+    init(map: Mapper, fieldPrefix: String?) throws
 }
 
 public extension Mappable {
